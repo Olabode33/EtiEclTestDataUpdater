@@ -14,5 +14,14 @@ namespace EtiEclTestDataUpdater.Data
                    $" Assumption_NonExpired = {input.NonExpired} " +
                    $" where CalibrationId = (select top 1 id from CalibrationRunEadBehaviouralTerms where OrganizationUnitId = {input.AffiliateId} and [Status] = 7);";
         }
+
+        public static string UpdateCalibrationEadCcfSummary(CalibrationResultCcfSummary input)
+        {
+            return $"Update [CalibrationResult_EAD_CCF_Summary] " +
+                   $" set [OD_CCF] = {input.OdCcf}, " +
+                   $" [Card_CCF] = {input.CardCcf}, " +
+                   $" [Overall_CCF] = {input.OverallCcf} " +
+                   $" where CalibrationId = (select top 1 id from CalibrationRunEadCcfSummary where OrganizationUnitId = {input.AffiliateId} and [Status] = 7);";
+        }
     }
 }

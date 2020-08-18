@@ -10,4 +10,12 @@ namespace EtiEclTestDataUpdater.Model
         public double Expired { get; set; }
         public double NonExpired { get; set; }
     }
+
+    public class CalibrationResultCcfSummary
+    {
+        public long AffiliateId { get; set; }
+        public double OdCcf { get; set; }
+        public double CardCcf { get; set; }
+        public double OverallCcf { get; set; }
+    }
 }

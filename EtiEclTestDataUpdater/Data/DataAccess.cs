@@ -31,7 +31,6 @@ namespace EtiEclTestDataUpdater.Data
                 using (SqlConnection con = new SqlConnection(_connectionString))
                 {
                     var cmd = new SqlCommand(qry, con);
-                    //cmd.CommandType = System.Data.CommandType.Text;
 
                     con.Open();
                     var i = cmd.ExecuteNonQuery();
