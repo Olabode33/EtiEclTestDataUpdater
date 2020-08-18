@@ -9,11 +9,11 @@ using System.Text;
 
 namespace EtiEclTestDataUpdater.Processor
 {
-    public class CalibrationResultCcfSummaryProcessor
+    public class CalibrationResultPdCureRateRrRfProcessor
     {
         private readonly DataAccess _dataAccess;
 
-        public CalibrationResultCcfSummaryProcessor(DataAccess dataAccess)
+        public CalibrationResultPdCureRateRrRfProcessor(DataAccess dataAccess)
         {
             _dataAccess = dataAccess;
         }
@@ -27,7 +27,7 @@ namespace EtiEclTestDataUpdater.Processor
             {
                 foreach (var item in dataList)
                 {
-                    var qry = Queries.UpdateCalibrationEadCcfSummary(item) + "\n";
+                    var qry = Queries.UpdateCalibrationPdCrDr(item) + "\n";
                     qryBuilder.Append(qry);
                 }
 
@@ -36,23 +36,23 @@ namespace EtiEclTestDataUpdater.Processor
 
         }
 
-        public List<CalibrationResultCcfSummary> ReadFromExcel()
+        public List<CalibrationResultPdCrDr> ReadFromExcel()
         {
-            var dataList = new List<CalibrationResultCcfSummary>();
+            var dataList = new List<CalibrationResultPdCrDr>();
             var filePath = $"{Path.Combine(_dataAccess.GetFilePath(), "AssumptionTemplate.xlsx")}";
 
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             using (var package = new ExcelPackage(new FileInfo(filePath)))
             {
-                ExcelWorksheet worksheet = package.Workbook.Worksheets[2]; //CCF Sheet
+                ExcelWorksheet worksheet = package.Workbook.Worksheets[5]; //Calibration_CureRate_RR_RF  Sheet
                 int rows = worksheet.Dimension.Rows;
 
                 for (int i = 2; i < rows; i++)
                 {
                     var AffiliateId = worksheet.Cells[i, 1].Value;
-                    var od = worksheet.Cells[i, 2].Value;
-                    var card = worksheet.Cells[i, 3].Value;
-                    var overall = worksheet.Cells[i, 4].Value;
+                    var cureRate = worksheet.Cells[i, 2].Value;
+                    var redefaultRate = worksheet.Cells[i, 3].Value;
+                    var redefaultFactor = worksheet.Cells[i, 4].Value;
 
                     if (AffiliateId == null)
                     {
@@ -64,11 +64,11 @@ namespace EtiEclTestDataUpdater.Processor
                     }
                     else
                     {
-                        var data = new CalibrationResultCcfSummary();
+                        var data = new CalibrationResultPdCrDr();
                         try { data.AffiliateId = Convert.ToInt64(AffiliateId); } catch { data.AffiliateId = -1; }
-                        try { data.OdCcf = Convert.ToDouble(od); } catch { data.OdCcf = 0.0; }
-                        try { data.CardCcf = Convert.ToDouble(card); } catch { data.CardCcf = 0.0; }
-                        try { data.OverallCcf = Convert.ToDouble(overall); } catch { data.OverallCcf = 0.0; }
+                        try { data.CureRate = Convert.ToDouble(cureRate); } catch { data.CureRate = 0.0; }
+                        try { data.RedefaultRate = Convert.ToDouble(redefaultRate); } catch { data.RedefaultRate = 0.0; }
+                        try { data.RedefaultFactor = Convert.ToDouble(redefaultFactor); } catch { data.RedefaultFactor = 0.0; }
 
                         dataList.Add(data);
                     }

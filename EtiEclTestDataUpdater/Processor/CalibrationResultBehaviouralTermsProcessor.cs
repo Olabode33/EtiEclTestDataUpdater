@@ -23,13 +23,16 @@ namespace EtiEclTestDataUpdater.Processor
             var dataList = ReadFromExcel();
             var qryBuilder = new StringBuilder();
 
-            foreach (var item in dataList)
+            if (dataList.Count > 0)
             {
-                var qry = Queries.UpdateCalibrationEadBehaviouralTerm(item) + "\n";
-                qryBuilder.Append(qry);
-            }
+                foreach (var item in dataList)
+                {
+                    var qry = Queries.UpdateCalibrationEadBehaviouralTerm(item) + "\n";
+                    qryBuilder.Append(qry);
+                }
 
-            _dataAccess.ExecuteQuery(qryBuilder.ToString());
+                _dataAccess.ExecuteQuery(qryBuilder.ToString());
+            }
 
         }
 
