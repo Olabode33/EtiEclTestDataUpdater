@@ -7,6 +7,7 @@ namespace EtiEclTestDataUpdater.Data
 {
     public static class Queries
     {
+        #region Update Calibration Result Query
         public static string UpdateCalibrationEadBehaviouralTerm(CalibrationResultBehaviouralTerm input)
         {
             return $"Update [CalibrationResult_EAD_Behavioural_Terms] " +
@@ -68,5 +69,70 @@ namespace EtiEclTestDataUpdater.Data
                    $" set [Months_PDs_12] = {input.Pd12Months} " +
                    $" where [Rating] = {input.Rating} and  CalibrationId = (select top 1 id from CalibrationRunPdCrDrs where OrganizationUnitId = {input.AffiliateId} and [Status] = 7);";
         }
+        #endregion
+
+        #region Assumption Update Query
+        public static string UpdateEadInputAssumptionByKey(GeneralAssumptionEntity input)
+        {
+            return $"Update [EadInputAssumptions] " +
+                   $" set [Value] = {input.Value} " +
+                   $" where [Key] = '{input.Key}' and [OrganizationUnitId] = {input.AffiliateId};";
+        }
+
+        public static string UpdateLgdCorAssumption(LgdCorAssumption input)
+        {
+            var collateralValueKey = input.LgdGroup == 3 ? "CostOfRecoveryHighCollateralValue" : "CostOfRecoveryLowCollateralValue";
+            return $"Update [LgdInputAssumptions]  set [Value] = {input.CollateralValue}  where [LgdGroup] = {input.LgdGroup} and [Key] = '{collateralValueKey}' and [OrganizationUnitId] = {input.AffiliateId}; " + 
+                   $"Update [LgdInputAssumptions]  set [Value] = {input.Debenture}  where [LgdGroup] = {input.LgdGroup} and [InputName] = 'Debenture' and [OrganizationUnitId] = {input.AffiliateId}; " + 
+                   $"Update [LgdInputAssumptions]  set [Value] = {input.Cash}  where [LgdGroup] = {input.LgdGroup} and [InputName] = 'Cash' and [OrganizationUnitId] = {input.AffiliateId}; " + 
+                   $"Update [LgdInputAssumptions]  set [Value] = {input.Inventory}  where [LgdGroup] = {input.LgdGroup} and [InputName] = 'Inventory' and [OrganizationUnitId] = {input.AffiliateId}; " + 
+                   $"Update [LgdInputAssumptions]  set [Value] = {input.PlantEquipment}  where [LgdGroup] = {input.LgdGroup} and [InputName] = 'Plant & Equipment' and [OrganizationUnitId] = {input.AffiliateId}; " + 
+                   $"Update [LgdInputAssumptions]  set [Value] = {input.ResidentialProperty}  where [LgdGroup] = {input.LgdGroup} and [InputName] = 'Residential Property' and [OrganizationUnitId] = {input.AffiliateId}; " + 
+                   $"Update [LgdInputAssumptions]  set [Value] = {input.CommercialProperty}  where [LgdGroup] = {input.LgdGroup} and [InputName] = 'Commercial Property' and [OrganizationUnitId] = {input.AffiliateId}; " + 
+                   $"Update [LgdInputAssumptions]  set [Value] = {input.Receivables}  where [LgdGroup] = {input.LgdGroup} and [InputName] = 'Receivables' and [OrganizationUnitId] = {input.AffiliateId}; " + 
+                   $"Update [LgdInputAssumptions]  set [Value] = {input.Shares}  where [LgdGroup] = {input.LgdGroup} and [InputName] = 'Shares' and [OrganizationUnitId] = {input.AffiliateId}; " + 
+                   $"Update [LgdInputAssumptions]  set [Value] = {input.Vehicle}  where [LgdGroup] = {input.LgdGroup} and [InputName] = 'Vehicle' and [OrganizationUnitId] = {input.AffiliateId}; " + 
+                   $"\n";
+        }
+
+        public static string UpdateLgdCollateralGrowthAssumption(LgdCorAssumption input)
+        {
+            return $"Update [LgdInputAssumptions]  set [Value] = {input.Debenture}  where [LgdGroup] = {input.LgdGroup} and [InputName] = 'Debenture' and [OrganizationUnitId] = {input.AffiliateId}; " + 
+                   $"Update [LgdInputAssumptions]  set [Value] = {input.Cash}  where [LgdGroup] = {input.LgdGroup} and [InputName] = 'Cash' and [OrganizationUnitId] = {input.AffiliateId}; " + 
+                   $"Update [LgdInputAssumptions]  set [Value] = {input.Inventory}  where [LgdGroup] = {input.LgdGroup} and [InputName] = 'Inventory' and [OrganizationUnitId] = {input.AffiliateId}; " + 
+                   $"Update [LgdInputAssumptions]  set [Value] = {input.PlantEquipment}  where [LgdGroup] = {input.LgdGroup} and [InputName] = 'Plant & Equipment' and [OrganizationUnitId] = {input.AffiliateId}; " + 
+                   $"Update [LgdInputAssumptions]  set [Value] = {input.ResidentialProperty}  where [LgdGroup] = {input.LgdGroup} and [InputName] = 'Residential Property' and [OrganizationUnitId] = {input.AffiliateId}; " + 
+                   $"Update [LgdInputAssumptions]  set [Value] = {input.CommercialProperty}  where [LgdGroup] = {input.LgdGroup} and [InputName] = 'Commercial Property' and [OrganizationUnitId] = {input.AffiliateId}; " + 
+                   $"Update [LgdInputAssumptions]  set [Value] = {input.Receivables}  where [LgdGroup] = {input.LgdGroup} and [InputName] = 'Receivables' and [OrganizationUnitId] = {input.AffiliateId}; " + 
+                   $"Update [LgdInputAssumptions]  set [Value] = {input.Shares}  where [LgdGroup] = {input.LgdGroup} and [InputName] = 'Shares' and [OrganizationUnitId] = {input.AffiliateId}; " + 
+                   $"Update [LgdInputAssumptions]  set [Value] = {input.Vehicle}  where [LgdGroup] = {input.LgdGroup} and [InputName] = 'Vehicle' and [OrganizationUnitId] = {input.AffiliateId}; " + 
+                   $"\n";
+        }
+
+        public static string UpdateLgdCollateralTypeAssumption(GeneralAssumptionEntity input)
+        {
+            return $"Update [LgdInputAssumptions]  set [Value] = {input.Value}  where [LgdGroup] = 8 and [InputName] = '{input.Key}' and [OrganizationUnitId] = {input.AffiliateId}; ";
+        }
+
+        public static string UpdatePdSnPAssumption(PdSnPAssumption input)
+        {
+            return $"Update [PdInputAssumptions]  set [Value] = '{input.PdRating}'  where [PdGroup] = {input.PdGroup} and [InputName] = '{input.CreditRating}' and [OrganizationUnitId] = {input.AffiliateId}; ";
+        }
+
+        public static string UpdatePdSnPCummulativeDefaultRatesAssumption(PdSnPCummulativeDefaultRatesAssumption input)
+        {
+            return $"Update [PdInputAssumptionSnPCummulativeDefaultRates] set [Value] = '{input.Value}'  where [Rating] = '{input.Rating}' and [Years] = '{input.Year}' and [OrganizationUnitId] = {input.AffiliateId}; ";
+        }
+
+        public static string UpdateImpairmentScenarioInputAssumption(GeneralAssumptionEntity input)
+        {
+            return $"Update [Assumptions] set [Value] = '{input.Value}'  where [InputName] = '{input.Key}' and [OrganizationUnitId] = {input.AffiliateId}; ";
+        }
+
+        public static string UpdateImpairmentCreditRatingAssumption(ImpairmentCreditRating input)
+        {
+            return $"Update [Assumptions] set [Value] = '{input.Value}'  where [InputName] = 'Credit Rating Rank {input.Key}' and [OrganizationUnitId] = {input.AffiliateId}; ";
+        }
+        #endregion
     }
 }

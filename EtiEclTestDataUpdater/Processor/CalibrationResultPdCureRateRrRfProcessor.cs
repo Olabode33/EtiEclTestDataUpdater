@@ -32,6 +32,7 @@ namespace EtiEclTestDataUpdater.Processor
                 }
 
                 _dataAccess.ExecuteQuery(qryBuilder.ToString());
+                Console.WriteLine("Completed: " + this.GetType().Name);
             }
 
         }
@@ -47,7 +48,7 @@ namespace EtiEclTestDataUpdater.Processor
                 ExcelWorksheet worksheet = package.Workbook.Worksheets[5]; //Calibration_CureRate_RR_RF  Sheet
                 int rows = worksheet.Dimension.Rows;
 
-                for (int i = 2; i < rows; i++)
+                for (int i = 2; i <= rows; i++)
                 {
                     var AffiliateId = worksheet.Cells[i, 1].Value;
                     var cureRate = worksheet.Cells[i, 2].Value;
@@ -56,11 +57,11 @@ namespace EtiEclTestDataUpdater.Processor
 
                     if (AffiliateId == null)
                     {
-                        Console.WriteLine("Row is empty: " + i.ToString());
+                        //Console.WriteLine("Row is empty: " + i.ToString());
                     }
                     else if(string.IsNullOrWhiteSpace(AffiliateId.ToString()))
                     {
-                        Console.WriteLine("Row is empty: " + i.ToString());
+                        //Console.WriteLine("Row is empty: " + i.ToString());
                     }
                     else
                     {

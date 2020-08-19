@@ -9,11 +9,11 @@ using System.Text;
 
 namespace EtiEclTestDataUpdater.Processor
 {
-    public class CalibrationResultPdMarginalDefaultRateProcessor
+    public class AssumptionEadProcessor
     {
         private readonly DataAccess _dataAccess;
 
-        public CalibrationResultPdMarginalDefaultRateProcessor(DataAccess dataAccess)
+        public AssumptionEadProcessor(DataAccess dataAccess)
         {
             _dataAccess = dataAccess;
         }
@@ -27,7 +27,7 @@ namespace EtiEclTestDataUpdater.Processor
             {
                 foreach (var item in dataList)
                 {
-                    var qry = Queries.UpdateCalibrationPdCommsConsMarginalDefaultRate(item) + "\n";
+                    var qry = Queries.UpdateEadInputAssumptionByKey(item) + "\n";
                     qryBuilder.Append(qry);
                 }
 
@@ -37,25 +37,22 @@ namespace EtiEclTestDataUpdater.Processor
 
         }
 
-        public List<CalibrationResultMarginalDefaultRate> ReadFromExcel()
+        public List<GeneralAssumptionEntity> ReadFromExcel()
         {
-            var dataList = new List<CalibrationResultMarginalDefaultRate>();
+            var dataList = new List<GeneralAssumptionEntity>();
             var filePath = $"{Path.Combine(_dataAccess.GetFilePath(), "AssumptionTemplate.xlsx")}";
 
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             using (var package = new ExcelPackage(new FileInfo(filePath)))
             {
-                ExcelWorksheet worksheet = package.Workbook.Worksheets[6]; //Calibration_PD_MariginalDefault  Sheet
+                ExcelWorksheet worksheet = package.Workbook.Worksheets[8]; //Assumption_EAD Sheet
                 int rows = worksheet.Dimension.Rows;
 
                 for (int i = 2; i <= rows; i++)
                 {
                     var AffiliateId = worksheet.Cells[i, 1].Value;
-                    var month = worksheet.Cells[i, 2].Value;
-                    var cons1 = worksheet.Cells[i, 3].Value;
-                    var cons2 = worksheet.Cells[i, 4].Value;
-                    var comm1 = worksheet.Cells[i, 5].Value;
-                    var comm2 = worksheet.Cells[i, 6].Value;
+                    var conversionFactorObe = worksheet.Cells[i, 2].Value;
+                    var prepaymentFactor = worksheet.Cells[i, 3].Value;
 
                     if (AffiliateId == null)
                     {
@@ -67,15 +64,17 @@ namespace EtiEclTestDataUpdater.Processor
                     }
                     else
                     {
-                        var data = new CalibrationResultMarginalDefaultRate();
-                        try { data.AffiliateId = Convert.ToInt64(AffiliateId); } catch { data.AffiliateId = -1; }
-                        try { data.Month = Convert.ToInt32(month); } catch { data.Month = 0; }
-                        try { data.Comm1 = Convert.ToDouble(comm1); } catch { data.Comm1 = 0.0; }
-                        try { data.Cons1 = Convert.ToDouble(cons1); } catch { data.Cons1 = 0.0; }
-                        try { data.Comm2 = Convert.ToDouble(comm2); } catch { data.Comm2 = 0.0; }
-                        try { data.Cons2 = Convert.ToDouble(cons2); } catch { data.Cons2 = 0.0; }
+                        var data_conversionFactorObe = new GeneralAssumptionEntity();
+                        try { data_conversionFactorObe.AffiliateId = Convert.ToInt64(AffiliateId); } catch { data_conversionFactorObe.AffiliateId = -1; }
+                        data_conversionFactorObe.Key = AssumptionKey.KEY_ConversionFactorOBE;
+                        try { data_conversionFactorObe.Value = Convert.ToDouble(conversionFactorObe); } catch { data_conversionFactorObe.Value = 0.0; }
+                        dataList.Add(data_conversionFactorObe);
 
-                        dataList.Add(data);
+                        var data_prepaymentFactor = new GeneralAssumptionEntity();
+                        try { data_prepaymentFactor.AffiliateId = Convert.ToInt64(AffiliateId); } catch { data_prepaymentFactor.AffiliateId = -1; }
+                        data_prepaymentFactor.Key = AssumptionKey.KEY_PrePaymentFactor;
+                        try { data_prepaymentFactor.Value = Convert.ToDouble(prepaymentFactor); } catch { data_prepaymentFactor.Value = 0.0; }
+                        dataList.Add(data_prepaymentFactor);
                     }
                 }
             }

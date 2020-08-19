@@ -9,11 +9,11 @@ using System.Text;
 
 namespace EtiEclTestDataUpdater.Processor
 {
-    public class CalibrationResultPdMarginalDefaultRateProcessor
+    public class AssumptionPdSnpProcessor
     {
         private readonly DataAccess _dataAccess;
 
-        public CalibrationResultPdMarginalDefaultRateProcessor(DataAccess dataAccess)
+        public AssumptionPdSnpProcessor(DataAccess dataAccess)
         {
             _dataAccess = dataAccess;
         }
@@ -27,7 +27,7 @@ namespace EtiEclTestDataUpdater.Processor
             {
                 foreach (var item in dataList)
                 {
-                    var qry = Queries.UpdateCalibrationPdCommsConsMarginalDefaultRate(item) + "\n";
+                    var qry = Queries.UpdatePdSnPAssumption(item) + "\n";
                     qryBuilder.Append(qry);
                 }
 
@@ -37,25 +37,23 @@ namespace EtiEclTestDataUpdater.Processor
 
         }
 
-        public List<CalibrationResultMarginalDefaultRate> ReadFromExcel()
+        public List<PdSnPAssumption> ReadFromExcel()
         {
-            var dataList = new List<CalibrationResultMarginalDefaultRate>();
+            var dataList = new List<PdSnPAssumption>();
             var filePath = $"{Path.Combine(_dataAccess.GetFilePath(), "AssumptionTemplate.xlsx")}";
 
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             using (var package = new ExcelPackage(new FileInfo(filePath)))
             {
-                ExcelWorksheet worksheet = package.Workbook.Worksheets[6]; //Calibration_PD_MariginalDefault  Sheet
+                ExcelWorksheet worksheet = package.Workbook.Worksheets[12]; //PD_SandP Sheet
                 int rows = worksheet.Dimension.Rows;
 
                 for (int i = 2; i <= rows; i++)
                 {
                     var AffiliateId = worksheet.Cells[i, 1].Value;
-                    var month = worksheet.Cells[i, 2].Value;
-                    var cons1 = worksheet.Cells[i, 3].Value;
-                    var cons2 = worksheet.Cells[i, 4].Value;
-                    var comm1 = worksheet.Cells[i, 5].Value;
-                    var comm2 = worksheet.Cells[i, 6].Value;
+                    var creditRating = worksheet.Cells[i, 2].Value;
+                    var etiCreditPolicy = worksheet.Cells[i, 3].Value;
+                    var bestFit = worksheet.Cells[i, 4].Value;
 
                     if (AffiliateId == null)
                     {
@@ -67,15 +65,19 @@ namespace EtiEclTestDataUpdater.Processor
                     }
                     else
                     {
-                        var data = new CalibrationResultMarginalDefaultRate();
-                        try { data.AffiliateId = Convert.ToInt64(AffiliateId); } catch { data.AffiliateId = -1; }
-                        try { data.Month = Convert.ToInt32(month); } catch { data.Month = 0; }
-                        try { data.Comm1 = Convert.ToDouble(comm1); } catch { data.Comm1 = 0.0; }
-                        try { data.Cons1 = Convert.ToDouble(cons1); } catch { data.Cons1 = 0.0; }
-                        try { data.Comm2 = Convert.ToDouble(comm2); } catch { data.Comm2 = 0.0; }
-                        try { data.Cons2 = Convert.ToDouble(cons2); } catch { data.Cons2 = 0.0; }
+                        var data_etiCreditPolicy = new PdSnPAssumption();
+                        data_etiCreditPolicy.PdGroup = 2;
+                        try { data_etiCreditPolicy.AffiliateId = Convert.ToInt64(AffiliateId); } catch { data_etiCreditPolicy.AffiliateId = -1; }
+                        try { data_etiCreditPolicy.CreditRating = creditRating.ToString(); } catch { data_etiCreditPolicy.CreditRating = ""; }
+                        try { data_etiCreditPolicy.PdRating = etiCreditPolicy.ToString(); } catch { data_etiCreditPolicy.PdRating = ""; }
+                        dataList.Add(data_etiCreditPolicy);
 
-                        dataList.Add(data);
+                        var data_bestFit = new PdSnPAssumption();
+                        data_bestFit.PdGroup = 3;
+                        try { data_bestFit.AffiliateId = Convert.ToInt64(AffiliateId); } catch { data_bestFit.AffiliateId = -1; }
+                        try { data_bestFit.CreditRating = creditRating.ToString(); } catch { data_bestFit.CreditRating = ""; }
+                        try { data_bestFit.PdRating = bestFit.ToString(); } catch { data_bestFit.PdRating = ""; }
+                        dataList.Add(data_bestFit);
                     }
                 }
             }

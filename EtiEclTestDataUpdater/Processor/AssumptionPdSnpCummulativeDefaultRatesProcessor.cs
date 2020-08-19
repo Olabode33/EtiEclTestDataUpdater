@@ -9,11 +9,11 @@ using System.Text;
 
 namespace EtiEclTestDataUpdater.Processor
 {
-    public class CalibrationResultPd12MonthProcessor
+    public class AssumptionPdSnpCummulativeDefaultRatesProcessor
     {
         private readonly DataAccess _dataAccess;
 
-        public CalibrationResultPd12MonthProcessor(DataAccess dataAccess)
+        public AssumptionPdSnpCummulativeDefaultRatesProcessor(DataAccess dataAccess)
         {
             _dataAccess = dataAccess;
         }
@@ -27,7 +27,7 @@ namespace EtiEclTestDataUpdater.Processor
             {
                 foreach (var item in dataList)
                 {
-                    var qry = Queries.UpdateCalibrationPd12Month(item) + "\n";
+                    var qry = Queries.UpdatePdSnPCummulativeDefaultRatesAssumption(item) + "\n";
                     qryBuilder.Append(qry);
                 }
 
@@ -37,24 +37,25 @@ namespace EtiEclTestDataUpdater.Processor
 
         }
 
-        public List<CalibrationResultPd12Month> ReadFromExcel()
+        public List<PdSnPCummulativeDefaultRatesAssumption> ReadFromExcel()
         {
-            var dataList = new List<CalibrationResultPd12Month>();
+            var dataList = new List<PdSnPCummulativeDefaultRatesAssumption>();
             var filePath = $"{Path.Combine(_dataAccess.GetFilePath(), "AssumptionTemplate.xlsx")}";
 
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             using (var package = new ExcelPackage(new FileInfo(filePath)))
             {
-                ExcelWorksheet worksheet = package.Workbook.Worksheets[7]; //Calibration_PD_CR_DR  Sheet
+                ExcelWorksheet worksheet = package.Workbook.Worksheets[13]; //PD_CummulativeRate Sheet
                 int rows = worksheet.Dimension.Rows;
 
                 for (int i = 2; i <= rows; i++)
                 {
                     var AffiliateId = worksheet.Cells[i, 1].Value;
-                    
-                    for (int rating = 1; rating <= 10; rating++)
+                    var rating = worksheet.Cells[i, 2].Value;
+
+                    for (int year = 1; year <= 15; year++)
                     {
-                        var pd12Month = worksheet.Cells[i, rating + 1].Value;
+                        var value = worksheet.Cells[i, year + 2].Value;
 
                         if (AffiliateId == null)
                         {
@@ -66,12 +67,13 @@ namespace EtiEclTestDataUpdater.Processor
                         }
                         else
                         {
-                            var data = new CalibrationResultPd12Month();
+                            var data = new PdSnPCummulativeDefaultRatesAssumption();
+                            data.Rating = rating.ToString();
+                            data.Year = year;
                             try { data.AffiliateId = Convert.ToInt64(AffiliateId); } catch { data.AffiliateId = -1; }
-                            data.Rating = rating;
-                            try { data.Pd12Months = Convert.ToDouble(pd12Month); } catch { data.Pd12Months = 0.0; }
-
+                            try { data.Value = Convert.ToDouble(value); } catch { data.Value = 0.0; }
                             dataList.Add(data);
+
                         }
                     }
                 }
