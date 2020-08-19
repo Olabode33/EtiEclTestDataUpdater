@@ -41,7 +41,7 @@ namespace EtiEclTestDataUpdater.Data
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error connecting to executing query: " + ex.Message + "\n Query: " + qry);
+                Console.WriteLine("Error connecting to executing query: " + ex.Message + "\n");
                 return false;
             }
 

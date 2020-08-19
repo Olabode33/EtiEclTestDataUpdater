@@ -45,7 +45,7 @@ namespace EtiEclTestDataUpdater.Processor
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             using (var package = new ExcelPackage(new FileInfo(filePath)))
             {
-                ExcelWorksheet worksheet = package.Workbook.Worksheets[10]; //CollateralGrowth Sheet
+                ExcelWorksheet worksheet = package.Workbook.Worksheets[8]; //CollateralGrowth Sheet
                 int rows = worksheet.Dimension.Rows;
 
                 for (int i = 2; i <= rows; i++)
@@ -87,6 +87,39 @@ namespace EtiEclTestDataUpdater.Processor
                         try { data.Vehicle = Convert.ToDouble(vehicle); } catch { data.Vehicle = 0.0; }
 
                         dataList.Add(data);
+
+                        if (data.LgdGroup == 5)
+                        {
+                            var dataOptimitic = new LgdCorAssumption();
+                            try { dataOptimitic.AffiliateId = Convert.ToInt64(AffiliateId); } catch { dataOptimitic.AffiliateId = -1; }
+                            dataOptimitic.LgdGroup = 6;
+                            dataOptimitic.Debenture = data.Debenture;
+                            dataOptimitic.Cash = data.Cash;
+                            dataOptimitic.Inventory = data.Inventory;
+                            dataOptimitic.PlantEquipment = data.PlantEquipment;
+                            dataOptimitic.ResidentialProperty = data.ResidentialProperty;
+                            dataOptimitic.CommercialProperty = data.CommercialProperty;
+                            dataOptimitic.Receivables = data.Receivables;
+                            dataOptimitic.Shares = data.Shares;
+                            dataOptimitic.Vehicle = data.Vehicle;
+
+                            dataList.Add(dataOptimitic);
+
+                            var dataDownturn = new LgdCorAssumption();
+                            try { dataDownturn.AffiliateId = Convert.ToInt64(AffiliateId); } catch { dataDownturn.AffiliateId = -1; }
+                            dataDownturn.LgdGroup = 7;
+                            dataDownturn.Debenture = dataOptimitic.Debenture * 0.92 - 0.08;
+                            dataDownturn.Cash = dataOptimitic.Cash * 0.92 - 0.08;
+                            dataDownturn.Inventory = dataOptimitic.Inventory * 0.92 - 0.08;
+                            dataDownturn.PlantEquipment = dataOptimitic.PlantEquipment * 0.92 - 0.08;
+                            dataDownturn.ResidentialProperty = dataOptimitic.ResidentialProperty * 0.92 - 0.08;
+                            dataDownturn.CommercialProperty = dataOptimitic.CommercialProperty * 0.92 - 0.08;
+                            dataDownturn.Receivables = dataOptimitic.Receivables * 0.92 - 0.08;
+                            dataDownturn.Shares = dataOptimitic.Shares * 0.92 - 0.08;
+                            dataDownturn.Vehicle = dataOptimitic.Vehicle * 0.92 - 0.08;
+
+                            dataList.Add(dataDownturn);
+                        }
 
                     }
                 }

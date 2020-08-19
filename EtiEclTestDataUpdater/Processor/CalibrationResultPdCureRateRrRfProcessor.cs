@@ -45,7 +45,7 @@ namespace EtiEclTestDataUpdater.Processor
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             using (var package = new ExcelPackage(new FileInfo(filePath)))
             {
-                ExcelWorksheet worksheet = package.Workbook.Worksheets[5]; //Calibration_CureRate_RR_RF  Sheet
+                ExcelWorksheet worksheet = package.Workbook.Worksheets[6]; //Calibration_CureRate_RR_RF  Sheet
                 int rows = worksheet.Dimension.Rows;
 
                 for (int i = 2; i <= rows; i++)

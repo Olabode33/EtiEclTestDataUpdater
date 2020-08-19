@@ -45,7 +45,7 @@ namespace EtiEclTestDataUpdater.Processor
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             using (var package = new ExcelPackage(new FileInfo(filePath)))
             {
-                ExcelWorksheet worksheet = package.Workbook.Worksheets[8]; //Assumption_EAD Sheet
+                ExcelWorksheet worksheet = package.Workbook.Worksheets[11]; //Assumption_EAD Sheet
                 int rows = worksheet.Dimension.Rows;
 
                 for (int i = 2; i <= rows; i++)

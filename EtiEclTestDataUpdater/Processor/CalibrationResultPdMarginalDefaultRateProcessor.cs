@@ -45,7 +45,7 @@ namespace EtiEclTestDataUpdater.Processor
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             using (var package = new ExcelPackage(new FileInfo(filePath)))
             {
-                ExcelWorksheet worksheet = package.Workbook.Worksheets[6]; //Calibration_PD_MariginalDefault  Sheet
+                ExcelWorksheet worksheet = package.Workbook.Worksheets[5]; //Calibration_PD_MariginalDefault  Sheet
                 int rows = worksheet.Dimension.Rows;
 
                 for (int i = 2; i <= rows; i++)
