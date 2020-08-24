@@ -124,7 +124,7 @@ namespace EtiEclTestDataUpdater.Data
             return $"Update [PdInputAssumptionSnPCummulativeDefaultRates] set [Value] = '{input.Value}'  where [Rating] = '{input.Rating}' and [Years] = '{input.Year}' and [OrganizationUnitId] = {input.AffiliateId}; ";
         }
 
-        public static string UpdateImpairmentScenarioInputAssumption(GeneralAssumptionEntity input)
+        public static string UpdateImpairmentScenarioInputAssumption(ImpairmentCreditRating input)
         {
             return $"Update [Assumptions] set [Value] = '{input.Value}'  where [InputName] = '{input.Key}' and [OrganizationUnitId] = {input.AffiliateId}; ";
         }

@@ -37,9 +37,9 @@ namespace EtiEclTestDataUpdater.Processor
 
         }
 
-        public List<GeneralAssumptionEntity> ReadFromExcel()
+        public List<ImpairmentCreditRating> ReadFromExcel()
         {
-            var dataList = new List<GeneralAssumptionEntity>();
+            var dataList = new List<ImpairmentCreditRating>();
             var filePath = $"{Path.Combine(_dataAccess.GetFilePath(), "AssumptionTemplate.xlsx")}";
 
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
@@ -64,10 +64,10 @@ namespace EtiEclTestDataUpdater.Processor
                     }
                     else
                     {
-                        var data = new GeneralAssumptionEntity();
+                        var data = new ImpairmentCreditRating();
                         try { data.AffiliateId = Convert.ToInt64(AffiliateId); } catch { data.AffiliateId = -1; }
                         try { data.Key = inputName.ToString(); } catch { data.Key = ""; }
-                        try { data.Value = Convert.ToDouble(value); } catch { data.Value = 0.0; }
+                        try { data.Value = value.ToString(); } catch { data.Value = value.ToString(); }
 
                         dataList.Add(data);
                     }
