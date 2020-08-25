@@ -134,5 +134,49 @@ namespace EtiEclTestDataUpdater.Data
             return $"Update [Assumptions] set [Value] = '{input.Value}'  where [InputName] = 'Credit Rating Rank {input.Key}' and [OrganizationUnitId] = {input.AffiliateId}; ";
         }
         #endregion
+
+        #region Get calibration result
+        public static string GetCalibrationResultEadBehaviouralTerms(long affiliateId)
+        {
+            return $"Select top 1 [Id] AffiliateId, [Assumption_NonExpired] NonExpired, [Assumption_Expired] Expired  FROM [CalibrationResult_EAD_Behavioural_Terms]" +
+                   $" where CalibrationId = (select id from CalibrationRunEadBehaviouralTerms where OrganizationUnitId = '{affiliateId}' and [Status] = 7)";
+        }
+
+        public static string GetCalibrationResultEadCcfSummary(long affiliateId)
+        {
+            return $"Select top 1 [Id] AffiliateId, [OD_CCF] OdCcf, [Card_CCF] CardCcf, [Overall_CCF] OverallCcf  FROM [CalibrationResult_EAD_CCF_Summary]" +
+                   $" where CalibrationId = (select id from CalibrationRunEadCcfSummary where OrganizationUnitId = '{affiliateId}' and [Status] = 7)";
+        }
+
+        public static string GetCalibrationResultLgdHaircut(long affiliateId)
+        {
+            return $"Select top 1 [Id] AffiliateId, [Debenture], [Cash], [Inventory], [Plant_And_Equipment] PlantEquipment, [Residential_Property] ResidentialProperty, [Commercial_Property] CommercialProperty, [Receivables], [Shares], [Vehicle]  " +
+                   $" FROM [CalibrationResult_LGD_HairCut_Summary] " +
+                   $" where CalibrationId = (select id from CalibrationRunLgdHairCut where OrganizationUnitId = '{affiliateId}' and [Status] = 7)";
+        }
+
+        public static string GetCalibrationResultLgdRecoveryRate(long affiliateId)
+        {
+            return $"Select top 1 [Id] AffiliateId, [Consumer_RecoveryRate] ConsumerRecoveryRate, [Commercial_RecoveryRate] CommercialRecoveryRate, [Corporate_RecoveryRate]  CorporateRecoveryRate" +
+                   $" FROM [CalibrationResult_LGD_RecoveryRate] " +
+                   $" where CalibrationId = (select id from CalibrationRunLgdRecoveryRate where OrganizationUnitId = '{affiliateId}' and [Status] = 7)";
+        }
+
+        public static string GetCalibrationResultPd12Months(long affiliateId)
+        {
+            return $"Select top 10 [Id] AffiliateId, [Rating], [Months_PDs_12] Pd12Months" +
+                   $" FROM [CalibrationResult_PD_12Months] " +
+                   $" where CalibrationId = (select id from CalibrationRunPdCrDrs where OrganizationUnitId = '{affiliateId}' and [Status] = 7) " +
+                   $" order by Rating ";
+        }
+
+        public static string GetCalibrationResultPdCrDrSummary(long affiliateId)
+        {
+            return $"Select top 1 [Id] AffiliateId, [Cure_Rate] CureRate, [Redefault_Rate] RedefaultRate, [Redefault_Factor] RedefaultFactor, [Commercial_CureRate] CommercialCureRate, [Commercial_RedefaultRate] CommercialRedefaultRate, [Consumer_CureRate] ConsumerCureRate, [Consumer_RedefaultRate] ConsumerRedefaultRate" +
+                   $" FROM [CalibrationResult_PD_12Months_Summary] " +
+                   $" where CalibrationId = (select id from CalibrationRunPdCrDrs where OrganizationUnitId = '{affiliateId}' and [Status] = 7) ";
+        }
+
+        #endregion
     }
 }

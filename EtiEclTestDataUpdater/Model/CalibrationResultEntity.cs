@@ -11,6 +11,13 @@ namespace EtiEclTestDataUpdater.Model
         public double NonExpired { get; set; }
     }
 
+    public class CalibrationResultBehaviouralTermForExtraction
+    {
+        public long AffiliateId { get; set; }
+        public string Expired { get; set; }
+        public string NonExpired { get; set; }
+    }
+
     public class CalibrationResultCcfSummary
     {
         public long AffiliateId { get; set; }
